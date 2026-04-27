@@ -16,11 +16,11 @@ This is the public verification surface. The peptideRx core repository is privat
 
 ## The three vectors
 
-| Vector | Shape                                | PDA hash (32 bytes, hex)                                                |
-|--------|--------------------------------------|-------------------------------------------------------------------------|
-| **A**  | 1 candidate · simple shape           | `28dbab77f560665f9b374b7fb8b5c0dfe8c8ff6582cbd29f773241acfb3a640e`     |
-| **B**  | 2 candidates · `-9.0` float edge     | `4c261a1105a45c55fb0d2eb45d74542b7f70b78b27aa41999cfa444400051594`     |
-| **C**  | 3 candidates · odd Merkle duplication| `1bc8afdfee1152521fa1d7a2e9e1019b9d199879ab921f7f5c4874e06d1861f4`     |
+| Vector | Shape                                                | PDA hash (32 bytes, hex)                                                |
+|--------|------------------------------------------------------|-------------------------------------------------------------------------|
+| **A**  | 1 candidate · simple shape                           | `28dbab77f560665f9b374b7fb8b5c0dfe8c8ff6582cbd29f773241acfb3a640e`     |
+| **B**  | 2 candidates · `-9.0` dialect edge in reveal bundle  | `4c261a1105a45c55fb0d2eb45d74542b7f70b78b27aa41999cfa444400051594`     |
+| **C**  | 3 candidates · odd-count Merkle duplication          | `1bc8afdfee1152521fa1d7a2e9e1019b9d199879ab921f7f5c4874e06d1861f4`     |
 
 Reproduced byte-for-byte by:
 
@@ -51,22 +51,30 @@ node verify.mjs
 
 **Live npm package**: [`@peptiderx/atl-verifier`](https://www.npmjs.com/package/@peptiderx/atl-verifier)
 
-Expected output:
+Expected output (11 assertions across three groups):
 
 ```
-[PASS] vector-a.json
-        expected: 28dbab77f560665f9b374b7fb8b5c0dfe8c8ff6582cbd29f773241acfb3a640e
-        actual:   28dbab77f560665f9b374b7fb8b5c0dfe8c8ff6582cbd29f773241acfb3a640e
-        chain:    verified
-[PASS] vector-b.json
-        ...
-[PASS] vector-c.json
-        ...
+GROUP 1 — Frozen PDA hashes reproduce under verifyPDA
+  [PASS] vector-a: hash matches + chain verifies -- pda=28dbab77f560665f... chain=verified
+  [PASS] vector-b: hash matches + chain verifies -- pda=4c261a1105a45c55... chain=verified
+  [PASS] vector-c: hash matches + chain verifies -- pda=1bc8afdfee115252... chain=verified
 
-Result: 3 passed, 0 failed.
+GROUP 2 — Per-candidate reveal bundles verify under verifyCandidateReveal
+  [PASS] vector-a candidate 0: reveal verifies (sequence=GIGAVLKVLT...)
+  [PASS] vector-b candidate 0: reveal verifies (sequence=KLAKLAKKLA...)
+  [PASS] vector-b candidate 1: reveal verifies (sequence=RGRGRGRGKL...)
+  [PASS] vector-c candidate 0: reveal verifies (sequence=ACDEFGHIKL...)
+  [PASS] vector-c candidate 1: reveal verifies (sequence=ACDEFGHIKL...)
+  [PASS] vector-c candidate 2: reveal verifies (sequence=ACDEFGHIKL...)
+
+GROUP 3 — Negative control: -9.0 preservation matters
+  [PASS] vector-b.reveal.json contains a `-9.0` literal -- fixture exercises the dialect
+  [PASS] JSON.parse + JSON.stringify of vector-b reveal DROPS the `.0` -- native round-trip breaks dialect; harness must use raw text
+
+Result: 11 passed, 0 failed.
 ```
 
-Exit code 0 if all three pass, 1 if any fail.
+Three checks per vector, plus a negative control proving the harness actually exercises the Python-dialect canonical JSON edge case (vector B's `-9.0` float that JS's native `JSON.parse + JSON.stringify` round-trip silently drops to `-9`). Exit code 0 if all 11 pass, 1 if any fail.
 
 ---
 
@@ -75,9 +83,10 @@ Exit code 0 if all three pass, 1 if any fail.
 | Path                                | Purpose                                                                                                |
 |-------------------------------------|--------------------------------------------------------------------------------------------------------|
 | `vectors/vector-a.json`             | Vector A: PDAOutput JSON, 1 candidate                                                                  |
-| `vectors/vector-b.json`             | Vector B: PDAOutput JSON, 2 candidates with the `-9.0` float canonical-JSON edge case                  |
-| `vectors/vector-c.json`             | Vector C: PDAOutput JSON, 3 candidates exercising odd-leaf Merkle duplication                          |
-| `vectors/vector-{a,b,c}.reveal.json` | Per-candidate reveal bundles for selective-disclosure verification                                     |
+| `vectors/vector-b.json`             | Vector B: PDAOutput JSON, 2 candidates                                                                 |
+| `vectors/vector-c.json`             | Vector C: PDAOutput JSON, 3 candidates · exercises odd-count Merkle duplication                        |
+| `vectors/vector-b.reveal.json`      | Vector B reveal bundle · candidate metadata containing the `-9.0` Python-dialect canonical-JSON edge   |
+| `vectors/vector-{a,c}.reveal.json`  | Vector A and C reveal bundles for selective-disclosure verification                                    |
 | `verify.mjs`                        | Node script that runs `@peptiderx/atl-verifier` against all three vectors and asserts the documented hashes |
 | `PDA-HASHES.txt`                    | Plain-text listing of the three hashes for direct human reference                                      |
 | `package.json`                      | npm dependency on `@peptiderx/atl-verifier`                                                            |
@@ -88,7 +97,7 @@ Exit code 0 if all three pass, 1 if any fail.
 
 **This proves**: the cross-language byte-identical determinism property of the PDA protocol at V1. Any change to the canonical JSON dialect, domain separators, Merkle tag, odd-level duplication rule, or TEE simulator key would flip these three hashes simultaneously.
 
-**This does NOT prove**: that any peptide design referenced by these vectors is safe, effective, or suitable for human use. The PDA is a cryptographic chain of custody for a research artifact, not a regulatory clearance. See LICENSE for the research-use-only addendum.
+**This does NOT prove**: that any peptide design referenced by these vectors is safe, effective, or suitable for human use. The PDA is a cryptographic chain of custody for a research artifact, not a regulatory clearance. See `NOTICE` for the non-binding research-use-only disclaimer.
 
 ---
 
@@ -120,9 +129,17 @@ The verifier package and this repo are **experimental**. Pin exact versions when
 
 ## License
 
-Apache-2.0 plus a research-use-only addendum on output interpretation.
+Apache-2.0 (see `LICENSE`). See `NOTICE` for non-binding, informational
+research-scope disclaimers and for the test-vector public-domain
+dedication. The `NOTICE` file does not modify the Apache-2.0 terms.
 
-The vector data itself is dedicated to the public domain (CC0): you may copy, modify, and redistribute the JSON files for any purpose without attribution.
+In short:
+
+- Verification scripts (`verify.mjs`, `package.json`) and documentation
+  (`README.md`, `PDA-HASHES.txt`, `LICENSE`, `NOTICE`): Apache-2.0.
+- Vector data files in `vectors/`: dedicated to the public domain
+  under Creative Commons CC0 1.0 Universal — copy, modify, and
+  redistribute for any purpose without attribution.
 
 ---
 
