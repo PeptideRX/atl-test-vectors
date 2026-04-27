@@ -1,0 +1,38 @@
+Peptide Rx ATL Test Vectors
+Copyright 2026 Peptide RX
+
+This product includes test vectors and verification scripts developed
+by Peptide RX (https://peptiderx.io).
+
+---
+
+ADDITIONAL NOTICE — TEST VECTORS PUBLIC DOMAIN
+
+The JSON test-vector files under `vectors/` (vector-a.json,
+vector-b.json, vector-c.json, and the corresponding `.reveal.json`
+companions) are dedicated to the public domain under Creative
+Commons CC0 1.0 Universal. You may copy, modify, and redistribute
+them for any purpose without attribution.
+
+The verification scripts (verify.mjs, package.json), documentation
+(README.md, PDA-HASHES.txt), and the LICENSE / NOTICE files are
+licensed under the Apache License, Version 2.0 as stated in the
+accompanying LICENSE file.
+
+---
+
+ADDITIONAL NOTICE — RESEARCH USE ONLY
+
+This package and the underlying Peptide Design Attestation (PDA)
+protocol are scoped to nonclinical research evaluation only.
+
+Successful verification of any vector proves only that the
+cryptographic chain of custody is internally consistent. It does
+NOT imply that any peptide design referenced is safe for human use,
+effective for any therapeutic indication, or compliant with any
+regulatory framework.
+
+Software status: EXPERIMENTAL. The verification harness and the
+verifier package are subject to change. The three published vectors
+and their PDA hashes are frozen at protocol V1 and will not change
+without a major version bump.
