@@ -30,7 +30,13 @@ The TypeScript implementation is open source. The Python and Rust implementation
 
 ## Run the verification (30 seconds)
 
-Requires Node 20+:
+Requires Node 20+. The verifier is live on npm:
+
+```bash
+npm install @peptiderx/atl-verifier@experimental
+```
+
+Or run the bundled harness:
 
 ```bash
 git clone https://github.com/PeptideRX/atl-test-vectors.git
@@ -38,6 +44,8 @@ cd atl-test-vectors
 npm install
 node verify.mjs
 ```
+
+**Live npm package**: [`@peptiderx/atl-verifier`](https://www.npmjs.com/package/@peptiderx/atl-verifier)
 
 Expected output:
 
