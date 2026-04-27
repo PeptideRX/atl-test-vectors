@@ -78,6 +78,54 @@ Three checks per vector, plus a negative control proving the harness actually ex
 
 ---
 
+## Test it with brand-new input — not just the three frozen vectors
+
+Anyone evaluating the protocol shouldn't have to take it on faith that `verifyPDA` works for arbitrary inputs. This repo ships `produce-and-verify-fresh.mjs`: a self-contained producer that builds a **brand-new PDA run** (different from A, B, C) using only public exports from `@peptiderx/atl-verifier`, then verifies the run end-to-end.
+
+```bash
+node produce-and-verify-fresh.mjs
+```
+
+Each run:
+
+- Generates fresh random salts, fresh random database hashes, a fresh nonce.
+- Builds 4 candidates (none of which appear in vectors A/B/C) with arbitrary peptide sequences and metadata.
+- Computes all 5 component hashes, the candidate-commit Merkle root, the TEE simulator transcript, the HMAC-SHA256 signature, and the outer 32-byte PDA.
+- Runs `verifyPDA` against the brand-new output — every check passes.
+- Generates inclusion proofs and runs `verifyCandidateReveal` on each candidate.
+- Writes the full PDAOutput to `vector-fresh.json` so you can inspect, modify, or attack it.
+
+Every run produces a different PDA hash because the inputs are freshly random. The verifier never has to trust that the inputs were "approved" — only that the cryptographic chain is internally consistent.
+
+Try the negative cases too:
+
+```bash
+# Tamper one byte of the generated PDAOutput, watch the verifier reject:
+node -e "
+import('@peptiderx/atl-verifier').then(async ({ verifyPDA }) => {
+  const fs = await import('node:fs');
+  const o = JSON.parse(fs.readFileSync('vector-fresh.json', 'utf8'));
+  o.pda_hex = (o.pda_hex[0] === 'a' ? 'b' : 'a') + o.pda_hex.slice(1);
+  console.log(await verifyPDA(o));
+});
+"
+# → passed: false, blocked_reasons: ['pda_mismatch']
+
+# Apply buyer audience posture, simulator attestations get refused:
+node -e "
+import('@peptiderx/atl-verifier').then(async ({ verifyPDA }) => {
+  const fs = await import('node:fs');
+  const o = JSON.parse(fs.readFileSync('vector-fresh.json', 'utf8'));
+  console.log(await verifyPDA(o, { acceptSimulator: false }));
+});
+"
+# → passed: false, blocked_reasons: ['simulator_refused']
+```
+
+This is the full audit surface: produce arbitrary inputs, verify they pass, tamper them, watch each tampering get caught with a structured block reason.
+
+---
+
 ## What's in this repo
 
 | Path                                | Purpose                                                                                                |
