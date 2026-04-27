@@ -1,0 +1,29 @@
+{
+  "name": "atl-test-vectors",
+  "version": "0.1.0-experimental.1",
+  "private": true,
+  "description": "Frozen cross-language test vectors for the Peptide Rx Peptide Design Attestation (PDA) protocol. Three vectors. Three documented hashes. Run `node verify.mjs` to confirm any conforming implementation produces them.",
+  "type": "module",
+  "scripts": {
+    "verify": "node verify.mjs",
+    "test": "node verify.mjs"
+  },
+  "dependencies": {
+    "@peptiderx/atl-verifier": "^0.2.0-experimental.1"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://peptiderx.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeptideRX/atl-test-vectors.git"
+  },
+  "keywords": [
+    "peptide-rx",
+    "atl",
+    "pda",
+    "test-vectors",
+    "experimental",
+    "cryptography",
+    "desci"
+  ]
+}

@@ -1,0 +1,38 @@
+Peptide Design Attestation (PDA) — Frozen Cross-Language Test Vectors
+=====================================================================
+
+These three SHA-256 hashes are the canonical 32-byte PDAs for the three
+frozen test vectors. Any conforming implementation in any language MUST
+produce these exact hex strings when run against the corresponding
+input file.
+
+If your implementation produces a different hash for any of these
+vectors, your implementation is non-conforming.
+
+  Vector A (1 candidate · simple shape)
+    pda_hex = 28dbab77f560665f9b374b7fb8b5c0dfe8c8ff6582cbd29f773241acfb3a640e
+
+  Vector B (2 candidates · -9.0 float edge case)
+    pda_hex = 4c261a1105a45c55fb0d2eb45d74542b7f70b78b27aa41999cfa444400051594
+
+  Vector C (3 candidates · odd Merkle duplication)
+    pda_hex = 1bc8afdfee1152521fa1d7a2e9e1019b9d199879ab921f7f5c4874e06d1861f4
+
+Status:        FROZEN at PDA protocol V1
+Schema:        v1
+Reference:     https://github.com/PeptideRX/atl-verifier
+Issued:        2026-04
+License:       Apache-2.0 + CC0 for the vectors themselves
+
+These hashes are reproduced in three independent implementations:
+  - Python  (private reference, pydantic v2 + sha2)
+  - Rust    (private reference, serde_json + sha2)
+  - TypeScript (public, github.com/PeptideRX/atl-verifier, Web Crypto)
+
+The TypeScript implementation is open source. The Python and Rust
+implementations are closed source for reasons documented at
+github.com/PeptideRX (biosecurity-relevant code, patent-pending IP).
+Anyone can run the TypeScript verifier against these vectors today.
+
+Research use only. Nonclinical. No verifier output implies a clinical
+claim, human safety, or therapeutic efficacy.

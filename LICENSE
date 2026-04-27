@@ -1,0 +1,48 @@
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   Copyright 2026 Peptide RX
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   ---
+
+   ADDITIONAL NOTICE — TEST VECTORS PUBLIC DOMAIN
+
+   The JSON test-vector files in `vectors/` (vector-a.json, vector-b.json,
+   vector-c.json, and the .reveal.json companions) are dedicated to the
+   public domain under Creative Commons CC0 1.0 Universal. You may copy,
+   modify, and redistribute them for any purpose without attribution.
+
+   The verification scripts (verify.mjs, package.json) and documentation
+   (README.md, PDA-HASHES.txt, LICENSE) are licensed under Apache-2.0 as
+   stated above.
+
+   ---
+
+   ADDITIONAL NOTICE — RESEARCH USE ONLY
+
+   This package and the underlying Peptide Design Attestation (PDA)
+   protocol are scoped to nonclinical research evaluation only.
+
+   Successful verification of any vector proves only that the
+   cryptographic chain of custody is internally consistent. It does NOT
+   imply that any peptide design referenced is safe for human use,
+   effective for any therapeutic indication, or compliant with any
+   regulatory framework.
+
+   Software status: EXPERIMENTAL. The verification harness and the
+   verifier package are subject to change. The three published vectors
+   and their PDA hashes are frozen at protocol V1 and will not change
+   without a major version bump.
