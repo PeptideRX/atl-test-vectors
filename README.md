@@ -1,5 +1,9 @@
 # atl-test-vectors
 
+[![verify](https://github.com/PeptideRX/atl-test-vectors/actions/workflows/verify.yml/badge.svg)](https://github.com/PeptideRX/atl-test-vectors/actions/workflows/verify.yml)
+[![verifier](https://img.shields.io/npm/v/@peptiderx/atl-verifier/experimental?label=verifier&color=cb3837)](https://www.npmjs.com/package/@peptiderx/atl-verifier)
+[![status](https://img.shields.io/badge/status-experimental-orange)](#)
+
 > ⚠️ **EXPERIMENTAL · ACTIVE DEVELOPMENT.** Published in the open as part of building peptideRx in public. The protocol is at V1 but APIs around it are not yet stable. The vectors and their published hashes are frozen — those will not change without a major-version bump.
 
 Three frozen cryptographic test vectors for the Peptide Rx **Peptide Design Attestation (PDA)** protocol.
