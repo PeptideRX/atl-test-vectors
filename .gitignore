@@ -1,6 +1,9 @@
 node_modules/
-package-lock.json
 *.log
 .DS_Store
 .env
 .env.local
+
+# package-lock.json is intentionally committed. The verifier dependency
+# is pinned exactly so this repo functions as a frozen reproduction
+# harness, not a moving target.
